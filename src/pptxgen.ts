@@ -76,6 +76,7 @@ import {
 	SchemeColor,
 	ShapeType,
 	WRITE_OUTPUT_TYPE,
+	ANCHOR
 } from './core-enums'
 import {
 	AddSlideProps,
@@ -97,7 +98,7 @@ import * as genMedia from './gen-media'
 import * as genTable from './gen-tables'
 import * as genXml from './gen-xml'
 
-const VERSION = '3.12.0-beta-20220908-2210'
+const VERSION = '3.10.0-beta-20220130-1457'
 
 export default class PptxGenJS implements IPresentationProps {
 	// Property getters/setters
@@ -115,8 +116,8 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @see https://support.office.com/en-us/article/Change-the-size-of-your-slides-040a811c-be43-40b9-8d04-0de5ed79987e
 	 */
 	private _layout: string
-	public set layout (value: string) {
-		const newLayout: PresLayout = this.LAYOUTS[value]
+	public set layout(value: string) {
+		let newLayout: PresLayout = this.LAYOUTS[value]
 
 		if (newLayout) {
 			this._layout = value
@@ -125,16 +126,15 @@ export default class PptxGenJS implements IPresentationProps {
 			throw new Error('UNKNOWN-LAYOUT')
 		}
 	}
-
-	public get layout (): string {
+	public get layout(): string {
 		return this._layout
 	}
 
 	/**
 	 * PptxGenJS Library Version
 	 */
-	private readonly _version: string = VERSION
-	public get version (): string {
+	private _version: string = VERSION
+	public get version(): string {
 		return this._version
 	}
 
@@ -142,11 +142,10 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @type {string}
 	 */
 	private _author: string
-	public set author (value: string) {
+	public set author(value: string) {
 		this._author = value
 	}
-
-	public get author (): string {
+	public get author(): string {
 		return this._author
 	}
 
@@ -154,11 +153,10 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @type {string}
 	 */
 	private _company: string
-	public set company (value: string) {
+	public set company(value: string) {
 		this._company = value
 	}
-
-	public get company (): string {
+	public get company(): string {
 		return this._company
 	}
 
@@ -167,11 +165,10 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @note the `revision` value must be a whole number only (without "." or "," - otherwise, PPT will throw errors upon opening!)
 	 */
 	private _revision: string
-	public set revision (value: string) {
+	public set revision(value: string) {
 		this._revision = value
 	}
-
-	public get revision (): string {
+	public get revision(): string {
 		return this._revision
 	}
 
@@ -179,11 +176,10 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @type {string}
 	 */
 	private _subject: string
-	public set subject (value: string) {
+	public set subject(value: string) {
 		this._subject = value
 	}
-
-	public get subject (): string {
+	public get subject(): string {
 		return this._subject
 	}
 
@@ -191,11 +187,10 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @type {string}
 	 */
 	private _title: string
-	public set title (value: string) {
+	public set title(value: string) {
 		this._title = value
 	}
-
-	public get title (): string {
+	public get title(): string {
 		return this._title
 	}
 
@@ -204,111 +199,102 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @type {boolean}
 	 */
 	private _rtlMode: boolean
-	public set rtlMode (value: boolean) {
+	public set rtlMode(value: boolean) {
 		this._rtlMode = value
 	}
-
-	public get rtlMode (): boolean {
+	public get rtlMode(): boolean {
 		return this._rtlMode
 	}
 
 	/** master slide layout object */
-	private readonly _masterSlide: PresSlide
-	public get masterSlide (): PresSlide {
+	private _masterSlide: PresSlide
+	public get masterSlide(): PresSlide {
 		return this._masterSlide
 	}
 
 	/** this Presentation's Slide objects */
-	private readonly _slides: PresSlide[]
-	public get slides (): PresSlide[] {
+	private _slides: PresSlide[]
+	public get slides(): PresSlide[] {
 		return this._slides
 	}
 
 	/** this Presentation's sections */
-	private readonly _sections: SectionProps[]
-	public get sections (): SectionProps[] {
+	private _sections: SectionProps[]
+	public get sections(): SectionProps[] {
 		return this._sections
 	}
 
 	/** slide layout definition objects, used for generating slide layout files */
-	private readonly _slideLayouts: SlideLayout[]
-	public get slideLayouts (): SlideLayout[] {
+	private _slideLayouts: SlideLayout[]
+	public get slideLayouts(): SlideLayout[] {
 		return this._slideLayouts
 	}
 
 	private LAYOUTS: { [key: string]: PresLayout }
 
 	// Exposed class props
-	private readonly _alignH = AlignH
-	public get AlignH (): typeof AlignH {
+	private _alignH = AlignH
+	public get AlignH(): typeof AlignH {
 		return this._alignH
 	}
-
-	private readonly _alignV = AlignV
-	public get AlignV (): typeof AlignV {
+	private _alignV = AlignV
+	public get AlignV(): typeof AlignV {
 		return this._alignV
 	}
-
-	private readonly _chartType = ChartType
-	public get ChartType (): typeof ChartType {
+	private _chartType = ChartType
+	public get ChartType(): typeof ChartType {
 		return this._chartType
 	}
-
-	private readonly _outputType = OutputType
-	public get OutputType (): typeof OutputType {
+	private _outputType = OutputType
+	public get OutputType(): typeof OutputType {
 		return this._outputType
 	}
-
 	private _presLayout: PresLayout
-	public get presLayout (): PresLayout {
+	public get presLayout(): PresLayout {
 		return this._presLayout
 	}
-
-	private readonly _schemeColor = SchemeColor
-	public get SchemeColor (): typeof SchemeColor {
+	private _schemeColor = SchemeColor
+	public get SchemeColor(): typeof SchemeColor {
 		return this._schemeColor
 	}
-
-	private readonly _shapeType = ShapeType
-	public get ShapeType (): typeof ShapeType {
+	private _shapeType = ShapeType
+	public get ShapeType(): typeof ShapeType {
 		return this._shapeType
 	}
 
 	/**
 	 * @depricated use `ChartType`
 	 */
-	private readonly _charts = CHART_TYPE
-	public get charts (): typeof CHART_TYPE {
+	private _charts = CHART_TYPE
+	public get charts(): typeof CHART_TYPE {
 		return this._charts
 	}
-
 	/**
 	 * @depricated use `SchemeColor`
 	 */
-	private readonly _colors = SCHEME_COLOR_NAMES
-	public get colors (): typeof SCHEME_COLOR_NAMES {
+	private _colors = SCHEME_COLOR_NAMES
+	public get colors(): typeof SCHEME_COLOR_NAMES {
 		return this._colors
 	}
-
 	/**
 	 * @depricated use `ShapeType`
 	 */
-	private readonly _shapes = SHAPE_TYPE
-	public get shapes (): typeof SHAPE_TYPE {
+	private _shapes = SHAPE_TYPE
+	public get shapes(): typeof SHAPE_TYPE {
 		return this._shapes
 	}
+	private _anchor = ANCHOR
+	public get anchor(): typeof ANCHOR {
+		return this._anchor
+	}
 
-	constructor () {
-		const layout4x3: PresLayout = { name: 'screen4x3', width: 9144000, height: 6858000 }
-		const layout16x9: PresLayout = { name: 'screen16x9', width: 9144000, height: 5143500 }
-		const layout16x10: PresLayout = { name: 'screen16x10', width: 9144000, height: 5715000 }
-		const layoutWide: PresLayout = { name: 'custom', width: 12192000, height: 6858000 }
+	constructor() {
 		// Set available layouts
 		this.LAYOUTS = {
-			LAYOUT_4x3: layout4x3,
-			LAYOUT_16x9: layout16x9,
-			LAYOUT_16x10: layout16x10,
-			LAYOUT_WIDE: layoutWide,
+			LAYOUT_4x3: { name: 'screen4x3', width: 9144000, height: 6858000 } as PresLayout,
+			LAYOUT_16x9: { name: 'screen16x9', width: 9144000, height: 5143500 } as PresLayout,
+			LAYOUT_16x10: { name: 'screen16x10', width: 9144000, height: 5715000 } as PresLayout,
+			LAYOUT_WIDE: { name: 'custom', width: 12192000, height: 6858000 } as PresLayout,
 		}
 
 		// Core
@@ -368,18 +354,19 @@ export default class PptxGenJS implements IPresentationProps {
 
 	/**
 	 * Provides an API for `addTableDefinition` to create slides as needed for auto-paging
-	 * @param {AddSlideProps} options - slide masterName and/or sectionTitle
+	 * @param {string} masterName - slide master name
 	 * @return {PresSlide} new Slide
 	 */
-	private readonly addNewSlide = (options?: AddSlideProps): PresSlide => {
+	private addNewSlide = (masterName: string): PresSlide => {
 		// Continue using sections if the first slide using auto-paging has a Section
-		const sectAlreadyInUse =
+		let sectAlreadyInUse =
 			this.sections.length > 0 &&
 			this.sections[this.sections.length - 1]._slides.filter(slide => slide._slideNum === this.slides[this.slides.length - 1]._slideNum).length > 0
 
-		options.sectionTitle = sectAlreadyInUse ? this.sections[this.sections.length - 1].title : null
-
-		return this.addSlide(options)
+		return this.addSlide({
+			masterName: masterName,
+			sectionTitle: sectAlreadyInUse ? this.sections[this.sections.length - 1].title : null,
+		})
 	}
 
 	/**
@@ -388,13 +375,13 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @return {PresSlide} Slide
 	 * @since 3.0.0
 	 */
-	private readonly getSlide = (slideNum: number): PresSlide => this.slides.filter(slide => slide._slideNum === slideNum)[0]
+	private getSlide = (slideNum: number): PresSlide => this.slides.filter(slide => slide._slideNum === slideNum)[0]
 
 	/**
 	 * Enables the `Slide` class to set PptxGenJS [Presentation] master/layout slidenumbers
 	 * @param {SlideNumberProps} slideNum - slide number config
 	 */
-	private readonly setSlideNumber = (slideNum: SlideNumberProps): void => {
+	private setSlideNumber = (slideNum: SlideNumberProps) => {
 		// 1: Add slideNumber to slideMaster1.xml
 		this.masterSlide._slideNumberProps = slideNum
 
@@ -406,9 +393,9 @@ export default class PptxGenJS implements IPresentationProps {
 	 * Create all chart and media rels for this Presentation
 	 * @param {PresSlide | SlideLayout} slide - slide with rels
 	 * @param {JSZip} zip - JSZip instance
-	 * @param {Promise<string>[]} chartPromises - promise array
+	 * @param {Promise<any>[]} chartPromises - promise array
 	 */
-	private readonly createChartMediaRels = (slide: PresSlide | SlideLayout, zip: JSZip, chartPromises: Array<Promise<string>>): void => {
+	private createChartMediaRels = (slide: PresSlide | SlideLayout, zip: JSZip, chartPromises: Promise<any>[]) => {
 		slide._relsChart.forEach(rel => chartPromises.push(genCharts.createExcelWorksheet(rel, zip)))
 		slide._relsMedia.forEach(rel => {
 			if (rel.type !== 'online' && rel.type !== 'hyperlink') {
@@ -416,9 +403,9 @@ export default class PptxGenJS implements IPresentationProps {
 				let data: string = rel.data && typeof rel.data === 'string' ? rel.data : ''
 
 				// B: Users will undoubtedly pass various string formats, so correct prefixes as needed
-				if (!data.includes(',') && !data.includes(';')) data = 'image/png;base64,' + data
-				else if (!data.includes(',')) data = 'image/png;base64,' + data
-				else if (!data.includes(';')) data = 'image/png;' + data
+				if (data.indexOf(',') === -1 && data.indexOf(';') === -1) data = 'image/png;base64,' + data
+				else if (data.indexOf(',') === -1) data = 'image/png;base64,' + data
+				else if (data.indexOf(';') === -1) data = 'image/png;' + data
 
 				// C: Add media
 				zip.file(rel.Target.replace('..', 'ppt'), data.split(',').pop(), { base64: true })
@@ -432,9 +419,9 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {Blob} blobContent - Blob content
 	 * @return {Promise<string>} Promise with file name
 	 */
-	private readonly writeFileToBrowser = async (exportName: string, blobContent: Blob): Promise<string> => {
+	private writeFileToBrowser = (exportName: string, blobContent: Blob): Promise<string> => {
 		// STEP 1: Create element
-		const eleLink = document.createElement('a')
+		let eleLink = document.createElement('a')
 		eleLink.setAttribute('style', 'display:none;')
 		eleLink.dataset.interception = 'off' // @see https://docs.microsoft.com/en-us/sharepoint/dev/spfx/hyperlinking
 		document.body.appendChild(eleLink)
@@ -442,7 +429,7 @@ export default class PptxGenJS implements IPresentationProps {
 		// STEP 2: Download file to browser
 		// DESIGN: Use `createObjectURL()` to D/L files in client browsers (FYI: synchronously executed)
 		if (window.URL.createObjectURL) {
-			const url = window.URL.createObjectURL(new Blob([blobContent], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' }))
+			let url = window.URL.createObjectURL(new Blob([blobContent], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' }))
 			eleLink.href = url
 			eleLink.download = exportName
 			eleLink.click()
@@ -454,7 +441,7 @@ export default class PptxGenJS implements IPresentationProps {
 			}, 100)
 
 			// Done
-			return await Promise.resolve(exportName)
+			return Promise.resolve(exportName)
 		}
 	}
 
@@ -463,10 +450,10 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {WRITE_OUTPUT_TYPE} outputType - output file type
 	 * @return {Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array>} Promise with data or stream (node) or filename (browser)
 	 */
-	private readonly exportPresentation = async (props: WriteProps): Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array> => {
-		const arrChartPromises: Array<Promise<string>> = []
-		let arrMediaPromises: Array<Promise<string>> = []
-		const zip = new JSZip()
+	private exportPresentation = (props: WriteProps): Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array> => {
+		let arrChartPromises: Promise<string>[] = []
+		let arrMediaPromises: Promise<string>[] = []
+		let zip = new JSZip()
 
 		// STEP 1: Read/Encode all Media before zip as base64 content, etc. is required
 		this.slides.forEach(slide => {
@@ -478,7 +465,7 @@ export default class PptxGenJS implements IPresentationProps {
 		arrMediaPromises = arrMediaPromises.concat(genMedia.encodeSlideMediaRels(this.masterSlide))
 
 		// STEP 2: Wait for Promises (if any) then generate the PPTX file
-		return await Promise.all(arrMediaPromises).then(async () => {
+		return Promise.all(arrMediaPromises).then(() => {
 			// A: Add empty placeholder objects to slides that don't already have them
 			this.slides.forEach(slide => {
 				if (slide._slideLayout) genObj.addPlaceholdersToSlideLayouts(slide)
@@ -510,15 +497,15 @@ export default class PptxGenJS implements IPresentationProps {
 
 			// C: Create a Layout/Master/Rel/Slide file for each SlideLayout and Slide
 			this.slideLayouts.forEach((layout, idx) => {
-				zip.file(`ppt/slideLayouts/slideLayout${idx + 1}.xml`, genXml.makeXmlLayout(layout))
-				zip.file(`ppt/slideLayouts/_rels/slideLayout${idx + 1}.xml.rels`, genXml.makeXmlSlideLayoutRel(idx + 1, this.slideLayouts))
+				zip.file('ppt/slideLayouts/slideLayout' + (idx + 1) + '.xml', genXml.makeXmlLayout(layout))
+				zip.file('ppt/slideLayouts/_rels/slideLayout' + (idx + 1) + '.xml.rels', genXml.makeXmlSlideLayoutRel(idx + 1, this.slideLayouts))
 			})
 			this.slides.forEach((slide, idx) => {
-				zip.file(`ppt/slides/slide${idx + 1}.xml`, genXml.makeXmlSlide(slide))
-				zip.file(`ppt/slides/_rels/slide${idx + 1}.xml.rels`, genXml.makeXmlSlideRel(this.slides, this.slideLayouts, idx + 1))
+				zip.file('ppt/slides/slide' + (idx + 1) + '.xml', genXml.makeXmlSlide(slide))
+				zip.file('ppt/slides/_rels/slide' + (idx + 1) + '.xml.rels', genXml.makeXmlSlideRel(this.slides, this.slideLayouts, idx + 1))
 				// Create all slide notes related items. Notes of empty strings are created for slides which do not have notes specified, to keep track of _rels.
-				zip.file(`ppt/notesSlides/notesSlide${idx + 1}.xml`, genXml.makeXmlNotesSlide(slide))
-				zip.file(`ppt/notesSlides/_rels/notesSlide${idx + 1}.xml.rels`, genXml.makeXmlNotesSlideRel(idx + 1))
+				zip.file('ppt/notesSlides/notesSlide' + (idx + 1) + '.xml', genXml.makeXmlNotesSlide(slide))
+				zip.file('ppt/notesSlides/_rels/notesSlide' + (idx + 1) + '.xml.rels', genXml.makeXmlNotesSlideRel(idx + 1))
 			})
 			zip.file('ppt/slideMasters/slideMaster1.xml', genXml.makeXmlMaster(this.masterSlide, this.slideLayouts))
 			zip.file('ppt/slideMasters/_rels/slideMaster1.xml.rels', genXml.makeXmlMasterRel(this.masterSlide, this.slideLayouts))
@@ -535,16 +522,17 @@ export default class PptxGenJS implements IPresentationProps {
 			this.createChartMediaRels(this.masterSlide, zip, arrChartPromises)
 
 			// E: Wait for Promises (if any) then generate the PPTX file
-			return await Promise.all(arrChartPromises).then(async () => {
+			// @ts-ignore
+			return Promise.all(arrChartPromises).then(() => {
 				if (props.outputType === 'STREAM') {
 					// A: stream file
-					return await zip.generateAsync({ type: 'nodebuffer', compression: props.compression ? 'DEFLATE' : 'STORE' })
+					return zip.generateAsync({ type: 'nodebuffer', compression: props.compression ? 'DEFLATE' : 'STORE' })
 				} else if (props.outputType) {
 					// B: Node [fs]: Output type user option or default
-					return await zip.generateAsync({ type: props.outputType })
+					return zip.generateAsync({ type: props.outputType })
 				} else {
 					// C: Browser: Output blob as app/ms-pptx
-					return await zip.generateAsync({ type: 'blob', compression: props.compression ? 'DEFLATE' : 'STORE' })
+					return zip.generateAsync({ type: 'blob', compression: props.compression ? 'DEFLATE' : 'STORE' })
 				}
 			})
 		})
@@ -557,24 +545,26 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {WriteBaseProps} props - output properties
 	 * @returns {Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array>} file stream
 	 */
-	async stream (props?: WriteBaseProps): Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array> {
-		return await this.exportPresentation({
-			compression: props?.compression,
+	stream(props?: WriteBaseProps): Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array> {
+		const propsCompress = typeof props === 'object' && props.hasOwnProperty('compression') ? props.compression : false
+
+		return this.exportPresentation({
+			compression: propsCompress,
 			outputType: 'STREAM',
 		})
 	}
 
 	/**
 	 * Export the current Presentation as JSZip content with the selected type
-	 * @param {WriteProps} props output properties
+	 * @param {WriteProps} props - output properties
 	 * @returns {Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array>} file content in selected type
 	 */
-	async write (props?: WriteProps | WRITE_OUTPUT_TYPE): Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array> {
+	write(props?: WriteProps | WRITE_OUTPUT_TYPE): Promise<string | ArrayBuffer | Blob | Buffer | Uint8Array> {
 		// DEPRECATED: @deprecated v3.5.0 - outputType - [[remove in v4.0.0]]
-		const propsOutpType = typeof props === 'object' && props?.outputType ? props.outputType : props ? (props as WRITE_OUTPUT_TYPE) : null
-		const propsCompress = typeof props === 'object' && props?.compression ? props.compression : false
+		const propsOutpType = typeof props === 'object' && props.hasOwnProperty('outputType') ? props.outputType : props ? (props as WRITE_OUTPUT_TYPE) : null
+		const propsCompress = typeof props === 'object' && props.hasOwnProperty('compression') ? props.compression : false
 
-		return await this.exportPresentation({
+		return this.exportPresentation({
 			compression: propsCompress,
 			outputType: propsOutpType,
 		})
@@ -585,21 +575,21 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {WriteFileProps} props - output file properties
 	 * @returns {Promise<string>} the presentation name
 	 */
-	async writeFile (props?: WriteFileProps | string): Promise<string> {
+	writeFile(props?: WriteFileProps | string): Promise<string> {
 		const fs = typeof require !== 'undefined' && typeof window === 'undefined' ? require('fs') : null // NodeJS
 		// DEPRECATED: @deprecated v3.5.0 - fileName - [[remove in v4.0.0]]
 		if (typeof props === 'string') console.log('Warning: `writeFile(filename)` is deprecated - please use `WriteFileProps` argument (v3.5.0)')
-		const propsExpName = typeof props === 'object' && props?.fileName ? props.fileName : typeof props === 'string' ? props : ''
-		const propsCompress = typeof props === 'object' && props?.compression ? props.compression : false
-		const fileName = propsExpName ? (propsExpName.toString().toLowerCase().endsWith('.pptx') ? propsExpName : propsExpName + '.pptx') : 'Presentation.pptx'
+		const propsExpName = typeof props === 'object' && props.hasOwnProperty('fileName') ? props.fileName : typeof props === 'string' ? props : ''
+		const propsCompress = typeof props === 'object' && props.hasOwnProperty('compression') ? props.compression : false
+		let fileName = propsExpName ? (propsExpName.toString().toLowerCase().endsWith('.pptx') ? propsExpName : propsExpName + '.pptx') : 'Presentation.pptx'
 
-		return await this.exportPresentation({
+		return this.exportPresentation({
 			compression: propsCompress,
 			outputType: fs ? 'nodebuffer' : null,
-		}).then(async content => {
+		}).then(content => {
 			if (fs) {
 				// Node: Output
-				return await new Promise<string>((resolve, reject) => {
+				return new Promise<string>((resolve, reject) => {
 					fs.writeFile(fileName, content, err => {
 						if (err) {
 							reject(err)
@@ -610,7 +600,7 @@ export default class PptxGenJS implements IPresentationProps {
 				})
 			} else {
 				// Browser: Output blob as app/ms-pptx
-				return await this.writeFileToBrowser(fileName, content as Blob)
+				return this.writeFileToBrowser(fileName, content as Blob)
 			}
 		})
 	}
@@ -622,11 +612,11 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {ISectionProps} section - section properties
 	 * @example pptx.addSection({ title:'Charts' });
 	 */
-	addSection (section: SectionProps): void {
+	addSection(section: SectionProps) {
 		if (!section) console.warn('addSection requires an argument')
 		else if (!section.title) console.warn('addSection requires a title')
 
-		const newSection: SectionProps = {
+		let newSection: SectionProps = {
 			_type: 'user',
 			_slides: [],
 			title: section.title,
@@ -641,9 +631,9 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {AddSlideProps} options - slide options
 	 * @returns {PresSlide} the new Slide
 	 */
-	addSlide (options?: AddSlideProps): PresSlide {
+	addSlide(options?: AddSlideProps): PresSlide {
 		// TODO: DEPRECATED: arg0 string "masterSlideName" dep as of 3.2.0
-		const masterSlideName = typeof options === 'string' ? options : options?.masterName ? options.masterName : ''
+		let masterSlideName = typeof options === 'string' ? options : options && options.masterName ? options.masterName : ''
 		let slideLayout: SlideLayout = {
 			_name: this.LAYOUTS[DEF_PRES_LAYOUT].name,
 			_presLayout: this.presLayout,
@@ -654,11 +644,11 @@ export default class PptxGenJS implements IPresentationProps {
 		}
 
 		if (masterSlideName) {
-			const tmpLayout = this.slideLayouts.filter(layout => layout._name === masterSlideName)[0]
+			let tmpLayout = this.slideLayouts.filter(layout => layout._name === masterSlideName)[0]
 			if (tmpLayout) slideLayout = tmpLayout
 		}
 
-		const newSlide = new Slide({
+		let newSlide = new Slide({
 			addSlide: this.addNewSlide,
 			getSlide: this.getSlide,
 			presLayout: this.presLayout,
@@ -666,7 +656,7 @@ export default class PptxGenJS implements IPresentationProps {
 			slideId: this.slides.length + 256,
 			slideRId: this.slides.length + 2,
 			slideNumber: this.slides.length + 1,
-			slideLayout,
+			slideLayout: slideLayout,
 		})
 
 		// A: Add slide to pres
@@ -674,24 +664,24 @@ export default class PptxGenJS implements IPresentationProps {
 
 		// B: Sections
 		// B-1: Add slide to section (if any provided)
-		// B-2: Handle slides without a section when sections are already is use ("loose" slides arent allowed, they all need a section)
-		if (options?.sectionTitle) {
-			const sect = this.sections.filter(section => section.title === options.sectionTitle)[0]
+		if (options && options.sectionTitle) {
+			let sect = this.sections.filter(section => section.title === options.sectionTitle)[0]
 			if (!sect) console.warn(`addSlide: unable to find section with title: "${options.sectionTitle}"`)
 			else sect._slides.push(newSlide)
-		} else if (this.sections && this.sections.length > 0 && (!options?.sectionTitle)) {
-			const lastSect = this._sections[this.sections.length - 1]
+		}
+		// B-2: Handle slides without a section when sections are already is use ("loose" slides arent allowed, they all need a section)
+		else if (this.sections && this.sections.length > 0 && (!options || !options.sectionTitle)) {
+			let lastSect = this._sections[this.sections.length - 1]
 
 			// CASE 1: The latest section is a default type - just add this one
 			if (lastSect._type === 'default') lastSect._slides.push(newSlide)
 			// CASE 2: There latest section is NOT a default type - create the defualt, add this slide
-			else {
+			else
 				this._sections.push({
 					title: `Default-${this.sections.filter(sect => sect._type === 'default').length + 1}`,
 					_type: 'default',
 					_slides: [newSlide],
 				})
-			}
 		}
 
 		return newSlide
@@ -702,7 +692,7 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {PresLayout} layout - layout properties
 	 * @example pptx.defineLayout({ name:'A3', width:16.5, height:11.7 });
 	 */
-	defineLayout (layout: PresLayout): void {
+	defineLayout(layout: PresLayout) {
 		// @see https://support.office.com/en-us/article/Change-the-size-of-your-slides-040a811c-be43-40b9-8d04-0de5ed79987e
 		if (!layout) console.warn('defineLayout requires `{name, width, height}`')
 		else if (!layout.name) console.warn('defineLayout requires `name`')
@@ -724,10 +714,10 @@ export default class PptxGenJS implements IPresentationProps {
 	 * Create a new slide master [layout] for the Presentation
 	 * @param {SlideMasterProps} props - layout properties
 	 */
-	defineSlideMaster (props: SlideMasterProps): void {
+	defineSlideMaster(props: SlideMasterProps) {
 		if (!props.title) throw new Error('defineSlideMaster() object argument requires a `title` value. (https://gitbrent.github.io/PptxGenJS/docs/masters.html)')
 
-		const newLayout: SlideLayout = {
+		let newLayout: SlideLayout = {
 			_margin: props.margin || DEF_SLIDE_MARGIN_IN,
 			_name: props.title,
 			_presLayout: this.presLayout,
@@ -762,13 +752,13 @@ export default class PptxGenJS implements IPresentationProps {
 	 * @param {string} eleId - table HTML element ID
 	 * @param {TableToSlidesProps} options - generation options
 	 */
-	tableToSlides (eleId: string, options: TableToSlidesProps = {}): void {
+	tableToSlides(eleId: string, options: TableToSlidesProps = {}) {
 		// @note `verbose` option is undocumented; used for verbose output of layout process
 		genTable.genTableToSlides(
 			this,
 			eleId,
 			options,
-			options?.masterSlideName ? this.slideLayouts.filter(layout => layout._name === options.masterSlideName)[0] : null
+			options && options.masterSlideName ? this.slideLayouts.filter(layout => layout._name === options.masterSlideName)[0] : null
 		)
 	}
 }
