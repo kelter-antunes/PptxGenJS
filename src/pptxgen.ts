@@ -76,7 +76,6 @@ import {
 	SchemeColor,
 	ShapeType,
 	WRITE_OUTPUT_TYPE,
-	ANCHOR
 } from './core-enums'
 import {
 	AddSlideProps,
@@ -98,7 +97,7 @@ import * as genMedia from './gen-media'
 import * as genTable from './gen-tables'
 import * as genXml from './gen-xml'
 
-const VERSION = '3.10.0-beta-20220130-1457'
+const VERSION = '3.11.0'
 
 export default class PptxGenJS implements IPresentationProps {
 	// Property getters/setters
@@ -282,10 +281,6 @@ export default class PptxGenJS implements IPresentationProps {
 	private _shapes = SHAPE_TYPE
 	public get shapes(): typeof SHAPE_TYPE {
 		return this._shapes
-	}
-	private _anchor = ANCHOR
-	public get anchor(): typeof ANCHOR {
-		return this._anchor
 	}
 
 	constructor() {
